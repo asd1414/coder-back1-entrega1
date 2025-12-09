@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "nombre": "Geforce RTX 5050",
+    "descripcion": "",
+    "fabricante": "gigabyte",
+    "precio": 489000
+  },
+  {
+    "id": 2,
+    "nombre": "Geforce RTX 5070",
+    "descripcion": "",
+    "fabricante": "msi",
+    "precio": 1500000
+  },
+  {
+    "id": 3,
+    "nombre": "AGeforce RTX 5080",
+    "descripcion": "",
+    "fabricante": "msi",
+    "precio": 2500000
+  },
+  {
+    "id": 4,
+    "nombre": "ATI Radeon RX 580",
+    "descripcion": "",
+    "fabricante": "AMD" ,
+    "precio": 200000
+  },
+  {
+    "id": 5,
+    "nombre": "ATI Radeon RX 9060 ",
+    "descripcion": "",
+    "fabricante": "AMD",
+    "precio": 600000
+  }
+]
