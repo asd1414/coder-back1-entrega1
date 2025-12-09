@@ -24,7 +24,7 @@
     "id": 4,
     "nombre": "ATI Radeon RX 580",
     "descripcion": "",
-    "fabricante": "AMD" ,
+    "fabricante": "AMD",
     "precio": 200000
   },
   {
@@ -33,5 +33,16 @@
     "descripcion": "",
     "fabricante": "AMD",
     "precio": 600000
+  },
+  {
+    "id": 6,
+    "title": "rtx 2060",
+    "description": "placa de video",
+    "code": "nose",
+    "price": 200000,
+    "status": true,
+    "stock": 20,
+    "category": "tarjeta grafica",
+    "thumbnails": {}
   }
 ]
