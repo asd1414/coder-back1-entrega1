@@ -11,18 +11,27 @@ const carts = "carts.json"
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+// Aqui cargamos los productos del JSON
 const cargarProductos = () => {
-  const data = fs.readFileSync(archivo, "utf-8");
-  return JSON.parse(data);
+  try {
+    const data = fs.readFileSync(archivo, "utf-8");
+    return JSON.parse(data);
+  }
+  catch (error) {
+    console.error("Error al leer los productos")
+    return []
+  }
 };
 
+//Aqui guardamos en el JSON
 const guardarProductos = (productos) => {
   fs.writeFileSync(archivo, JSON.stringify(productos, null, 2));
 };
 
 
 // muestra lista de productos
-app.get("/api/products/", (request, response) => {
+app.get("/api/products", (request, response) => {
   fs.readFile(archivo, "utf-8", (error, contenido) => {
     const productos = JSON.parse(contenido)
     response.send(productos)
@@ -52,13 +61,13 @@ app.get("/api/products/:pid", (request, response) => {
 
 
 //agrega producto
-app.post("/api/products/", (request, response) => {
-  const { title, description, code, price, status, stock, category, thumbnails } = request.body;
+app.post("/api/products/", (req, res) => {
+  const { title, description, code, price, status, stock, category, thumbnails } = req.body;
 
 
   const productos = cargarProductos();
   const nuevoProducto = {
-    id: productos.length > 0 ? productos[productos.length - 1].id + 1 : 1,
+    id: productos.length + 1,
     title,
     description,
     code,
@@ -72,19 +81,15 @@ app.post("/api/products/", (request, response) => {
   productos.push(nuevoProducto);
   guardarProductos(productos);
 
-  response.status(201).json(nuevoProducto);
+  res.status(201).json(nuevoProducto);
 });
 
 
 // actualiza un producto 
-app.put("/api/products/:pid", (response, request) => {
+app.put("/api/products/:pid", (res, req) => {
 
-  const { id, title, description, code, price, status, stock, category, thumbnails } = request.body;
-
-  
-  if (!id) {
-    return response.status(400).send({ error: "Se necesita el ID del producto a actualizar." });
-  }
+  const { id } = req.params;
+  const { title, description, code, price, status, stock, category, thumbnails } = req.body
 
   fs.readFile(archivo, "utf-8", (error, contenido) => {
     if (error) {
@@ -92,8 +97,8 @@ app.put("/api/products/:pid", (response, request) => {
       return response.status(500).send("Error al leer los productos.");
     }
 
-    const productos = JSON.parse(contenido); 
-    const indiceProducto = productos.findIndex(item => item.id == id); 
+    const productos = JSON.parse(contenido);
+    const indiceProducto = productos.findIndex(item => item.id == id);
 
     if (indiceProducto === -1) {
       return response.status(404).send({ estado: "Error", mensaje: "Producto no encontrado." });
@@ -138,6 +143,9 @@ app.get("/api/carts/", (request, response) => {
     response.send(carts)
   })
 })
+
+
+
 
 
 
