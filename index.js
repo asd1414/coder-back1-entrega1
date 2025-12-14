@@ -86,23 +86,15 @@ app.post("/api/products/", (req, res) => {
 
 
 // actualiza un producto 
-app.put("/api/products/:pid", (res, req) => {
+app.put("/api/products/:pid", (req, res) => {
 
-  const { id } = req.params;
+  const { id } = req.params.pid;
   const { title, description, code, price, status, stock, category, thumbnails } = req.body
 
   fs.readFile(archivo, "utf-8", (error, contenido) => {
-    if (error) {
-      console.error("Error al leer el archivo:", error);
-      return response.status(500).send("Error al leer los productos.");
-    }
 
     const productos = JSON.parse(contenido);
     const indiceProducto = productos.findIndex(item => item.id == id);
-
-    if (indiceProducto === -1) {
-      return response.status(404).send({ estado: "Error", mensaje: "Producto no encontrado." });
-    }
 
     const productoActualizado = {
       ...productos[indiceProducto],
@@ -118,35 +110,86 @@ app.put("/api/products/:pid", (res, req) => {
 
     productos[indiceProducto] = productoActualizado;
 
-    fs.writeFile(archivo, JSON.stringify(productos, null, 2), (err) => {
-      if (err) {
-        console.error("Error al guardar el archivo:", err);
-        return response.status(500).send("Error al guardar los productos.");
-      }
-
-      response.status(200).json(productoActualizado);
-    });
+    guardarProductos(productos);
+    res.status(200).json(productoActualizado)
   });
 });
 
 
-app.delete("/api/products/:pid", (response, request) => {
-
-})
-
-
-
-// muestra lista del carrito
-app.get("/api/carts/", (request, response) => {
-  fs.readFile(carts, "utf-8", (error, contenido) => {
-    const carts = JSON.parse(contenido)
-    response.send(carts)
+//Elimina un producto
+app.delete("/api/products/:pid", (req, res) => {
+  const { id } = req.params
+  fs.readFile(archivo, "utf-8", (error, contenido) => {
+    const productos = JSON.parse(contenido)
+    const indiceProducto = productos.find(item => item.id == id)
+    productos.splice(indiceProducto, 1)
+    guardarProductos(productos);
   })
 })
 
 
 
+//crea un carrito carrito
+app.post("/", (req, res) => {
+  let carts = []; 
+  try {
+    const data = fs.readFileSync(carts, "utf-8"); 
+    carts = JSON.parse(data); 
+  } catch (error) {
+    carts = []; 
+  }
 
+  const newId = carts.length > 0 ? carts[carts.length - 1].id + 1 : 1;
+
+  const nuevoCarrito = {
+    id: newId,
+    products: [] 
+  };
+
+  carts.push(nuevoCarrito);
+  
+  guardarCarts(carts); 
+
+  res.status(201).json(nuevoCarrito); 
+});
+
+
+
+
+// muestra lista del carrito
+app.get("/api/carts/", (req, res) => {
+  fs.readFile(carts, "utf-8", (error, contenido) => {
+    const carrito = JSON.parse(contenido)
+    res.send(carrito)
+  })
+})
+
+
+// agrega productos al carrito
+app.post("/:cid/product/:pid", (req, res) => {
+  const cartId = parseInt(req.params.cid, 10); 
+  const productId = parseInt(req.params.pid, 10); 
+  const quantity = 1; 
+
+  fs.readFile(carts, "utf-8", (error, contenido) => {
+    
+    let carts = JSON.parse(contenido);
+    const cartIndex = carts.findIndex(cart => cart.id === cartId);
+
+    const cart = carts[cartIndex];
+    const existingProduct = cart.products.find(item => item.id === productId);
+
+    if (existingProduct) {
+      existingProduct.quantity += quantity;
+    } else {
+      cart.products.push({ id: productId, quantity });
+    }
+
+    guardarCarts(carts);
+    
+    res.status(200).json(cart);
+  });
+});
 
 
 

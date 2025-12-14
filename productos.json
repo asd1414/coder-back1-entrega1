@@ -1,26 +1,5 @@
 [
   {
-    "id": 1,
-    "nombre": "Geforce RTX 5050",
-    "descripcion": "",
-    "fabricante": "gigabyte",
-    "precio": 489000
-  },
-  {
-    "id": 2,
-    "nombre": "Geforce RTX 5070",
-    "descripcion": "",
-    "fabricante": "msi",
-    "precio": 1500000
-  },
-  {
-    "id": 3,
-    "nombre": "AGeforce RTX 5080",
-    "descripcion": "",
-    "fabricante": "msi",
-    "precio": 2500000
-  },
-  {
     "id": 4,
     "nombre": "ATI Radeon RX 580",
     "descripcion": "",
@@ -44,5 +23,16 @@
     "stock": 20,
     "category": "tarjeta grafica",
     "thumbnails": {}
+  },
+  {
+    "id": 7,
+    "title": "Small Frozen Computer",
+    "description": "dasd",
+    "code": "asdasd",
+    "price": "20",
+    "status": "",
+    "stock": "",
+    "category": "",
+    "thumbnails": " "
   }
 ]
